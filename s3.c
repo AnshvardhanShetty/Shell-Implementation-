@@ -64,4 +64,24 @@ void launch_program(char *args[], int argsc)
     ///Handle the 'exit' command;
     ///so that the shell, not the child process,
     ///exits.
+    
+    if (args[0] == NULL){
+        return;
+    }
+    if (strcmp(args[0],"exit") == 0){
+        exit(0);
+    }
+
+
+    int rc = fork();
+    if (rc<0) {
+        perror("fork failed");
+        exit(1);
+    } 
+    else if (rc==0){
+        child(args, argsc);
+    }
+    else{
+        // main will reap
+    }
 }
