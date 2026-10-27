@@ -81,7 +81,7 @@ void launch_program(char *args[], int argsc)
     int rc = fork();
     if (rc<0) {
         perror("fork failed");
-        exit(1);
+        return;
     } 
     else if (rc==0){
         child(args, argsc);
