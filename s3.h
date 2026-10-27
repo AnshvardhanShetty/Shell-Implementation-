@@ -44,4 +44,8 @@ void child(char *args[], int argsc);
 
 ///Program launching functions (add more as appropriate)
 void launch_program(char *args[], int argsc);
+int command_with_redirection(char line[]);
+int find_redirection(char *args[], int argsc, int *type);
+void child_with_redirection(char *args[], int argsc, int type, char *filename);
+void launch_program_with_redirection(char *args[], int argsc);
 #endif
