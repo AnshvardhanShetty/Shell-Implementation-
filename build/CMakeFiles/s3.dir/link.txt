@@ -1,1 +1,0 @@
-/usr/bin/gcc -g CMakeFiles/s3.dir/s3.main.c.o CMakeFiles/s3.dir/s3.c.o -o s3 
