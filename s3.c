@@ -50,6 +50,11 @@ void child(char *args[], int argsc)
     ///Use execvp to load the binary 
     ///of the command specified in args[ARG_PROGNAME].
     ///For reference, see the code in lecture 3.
+
+    execvp(args[ARG_PROGNAME],args);
+    perror(args[ARG_PROGNAME]);
+    exit(1);
+
 }
 
 void launch_program(char *args[], int argsc)
