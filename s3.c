@@ -90,3 +90,78 @@ void launch_program(char *args[], int argsc)
         // main will reap
     }
 }
+
+// does the line contain < or > ?
+int command_with_redirection(char line[])
+{
+    // return true if line contains '<' OR '>'
+    return strchr(line, '<') != NULL || strchr(line, '>') != NULL;
+}
+
+// 2. Find which word is the operator, and which kind it is
+int find_redirection(char *args[], int argsc, int *type)
+{
+    for (int i = 0; i < argsc; i++) {
+        // TODO: if args[i] is "<"  → set *type = 1, return i
+        if (strcmp(args[i], ">") == 0) {*type = 1; return i;}
+        // TODO: if args[i] is ">"  → set *type = 2, return i
+        if (strcmp(args[i], ">>") == 0) {*type = 2; return i;}
+        // TODO: if args[i] is ">>" → set *type = 3, return i
+        if (strcmp(args[i], "<") == 0) {*type = 3; return i;}
+    }
+    *type = REDIR_NONE;
+    return -1;   // no operator found
+}
+if (i <= 0 || i + 1 >= argsc) {          // no operator, nothing before it, or no filename after it
+    fprintf(stderr, "s3: syntax error\n");
+    return;
+}
+
+// 3. Parent side: save the filename, hide it, fork
+void launch_program_with_redirection(char *args[], int argsc)
+{
+    int type;
+    int i = find_redirection(args, argsc, &type);
+
+    // char *filename = the word AFTER the operator
+    char *filename = args[i+1];
+    // put NULL where the operator is
+    args[i] = NULL
+
+    int rc = fork();
+    if (rc == 0) {
+        child_with_redirection(args, argsc, type, filename);
+    }
+}
+
+// 4. Child side: point slot 0 or 1 at the file, then run the command
+void child_with_redirection(char *args[], int argsc, int type, char *filename)
+{
+    int fd;
+    // if type is 1 → fd = open(filename, O_RDONLY);
+    if (type == 1){
+        fd = open(filename, O_RDONLY);
+    }
+    // TODO: if type is 2 → fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    else if (type == 2){
+        fd = open(filename, O_WRONLY, | O_CREAT | O_TRUNC, 0644);
+    }
+    // TODO: if type is 3 → fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    else (type ==3){
+        fd = open(filename, O_WRONLY, | O_CREAT | O_APPEND, 0644);
+    }
+
+    if (fd < 0) {
+        perror(filename);
+        exit(1); 
+    }
+
+    if (type == 1) {
+        dup2(fd, 0);
+    } else {
+        dup2(fd, 1);
+    }
+    
+    close(fd);
+    child(args, argsc);   
+}
